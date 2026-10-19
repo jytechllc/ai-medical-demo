@@ -1,5 +1,5 @@
 /**
- * History-taking templates (design doc §7.1).
+ * History-taking templates (DESIGN.md §7.1).
  *
  * Every consultation uses the general symptom points (onset, character,
  * triggers, associated symptoms, history...) plus the points of the template
@@ -91,9 +91,17 @@ export const TEMPLATES: Template[] = [
 
 const FALLBACK: Template = { id: "general", name: "通用", match: /.*/, slots: [] };
 
-/** Pick the first template whose pattern matches the complaint. */
+/**
+ * Pick the template for the symptom named first: in 头痛一个月，伴眩晕、恶心 the
+ * headache is the complaint and 恶心 only accompanies it.
+ */
 export function chooseTemplate(complaint: string): Template {
-  return TEMPLATES.find((t) => t.match.test(complaint)) ?? FALLBACK;
+  let best: { t: Template; at: number } | null = null;
+  for (const t of TEMPLATES) {
+    const at = complaint.search(t.match);
+    if (at >= 0 && (!best || at < best.at)) best = { t, at };
+  }
+  return best?.t ?? FALLBACK;
 }
 
 /** The full slot list for a consultation: template slots first, then general ones. */

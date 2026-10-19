@@ -1,18 +1,29 @@
 /**
- * The consultation graph (design doc §6–§8).
+ * The consultation graph (DESIGN.md §6–§8).
  *
- *   setup → understand → triage ─┬─ level 1–2 → emergency
- *               ▲                ├─ planner has questions → ask → wait ┐
- *               └────────────────┼──────────────────────────────────── ┘ (patient answers)
- *                                └─ planner done → draft → check ─┬─ pass → finalize
- *                                                    ▲            │
- *                                                    └─ fail (≤2) ┘
+ *   setup → screen ─┬─ rule hit level 1–2 → emergency (no model call)
+ *             ▲     └─ understand ─┬─ triage ─┬─ level 1–2 → emergency
+ *             │                    └─ phrase  ├─ planner has questions → ask → wait ┐
+ *             └───────────────────────────────┼─────────────────────────────────────┘ (patient answers)
+ *                                             └─ planner done → retrieve → draft → check ─┬─ pass → finalize
+ *                                                                            ▲            │
+ *                                                                            └─ fail (≤2) ┘
+ *
+ * `screen` runs the deterministic red-flag rules before any model call (#10).
+ * `triage` and `phrase` run in parallel; `ask` uses the rewritten question only
+ * if the consultation goes on, so an emergency discards it. With
+ * `phrasing: "template"` there is no `phrase` node and `ask` uses the template
+ * wording.
+ *
+ * `retrieve` looks up clinical guideline passages for the doctor-facing
+ * suggestions (#12); every suggestion must cite one of them.
  *
  * `wait` calls interrupt(): the graph pauses and the checkpointer saves the
  * whole state under the consultation id. The next answer resumes it, even in
  * another process, so nothing is re-derived from the transcript.
  */
-import { Annotation, END, START, StateGraph, interrupt, type BaseCheckpointSaver } from "@langchain/langgraph";
+import { Annotation, END, START, StateGraph, interrupt, type BaseCheckpointSaver, type LangGraphRunnableConfig } from "@langchain/langgraph";
+import { guidelineById, retrieve as retrieveGuidelines, type GuidelinePassage } from "./guidelines";
 import { LLMError, type LLM } from "./llm";
 import { plan, type AskedRound, DEFAULT_MAX_ROUNDS } from "./planner";
 import { applyUpdates, emptyRecord, type RecordTable, type SlotUpdate } from "./record";
@@ -20,7 +31,7 @@ import { extractPrompt, notePrompt, phrasePrompt, reviewPrompt, triagePrompt } f
 import { renderEmergency, renderNote } from "./render";
 import { extractSchema, noteSchema, phraseSchema, reviewSchema, triageSchema, type NoteOutput } from "./schemas";
 import { chooseTemplate, findSlot, slotsFor, TEMPLATES, type Slot, type Template } from "./templates";
-import { isEmergency, matchRules, mostUrgent, type Level, type RuleHit } from "./triage";
+import { isEmergency, matchPatientTurns, mostUrgent, type Level, type RuleHit } from "./triage";
 
 export const MAX_NOTE_REWRITES = 2;
 
@@ -43,6 +54,10 @@ export const ConsultationState = Annotation.Root({
   levelReason: keep<string>(() => ""),
   ruleHits: keep<RuleHit[]>(() => []),
   rejected: keep<SlotUpdate[]>(() => []),
+  /** The rewritten questions for the next round, written by `phrase` and used (or dropped) by `ask`. */
+  proposed: keep<{ slotIds: string[]; questions: string[] } | null>(() => null),
+  /** Guideline passages retrieved for this consultation; the note may cite only these. */
+  guidelineIds: keep<string[]>(() => []),
   note: keep<NoteOutput | null>(() => null),
   issues: keep<string[]>(() => []),
   reviewFailures: keep<number>(() => 0),
@@ -55,7 +70,34 @@ function templateOf(s: State): Template {
   return TEMPLATES.find((t) => t.id === s.templateId) ?? chooseTemplate(s.complaint);
 }
 
-export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRounds = DEFAULT_MAX_ROUNDS) {
+export const GUIDELINES_PER_NOTE = 4;
+
+/** What the guideline search is about: the complaint plus every answered point. */
+export function guidelineQuery(s: Pick<State, "complaint" | "record">, template: Template): string {
+  const answered = slotsFor(template)
+    .map((x) => s.record[x.id])
+    .filter((e) => e?.status === "answered")
+    .map((e) => `${e.value} ${e.quote}`);
+  return [s.complaint, template.name, ...answered].join(" ");
+}
+
+function passagesOf(s: State): GuidelinePassage[] {
+  return s.guidelineIds.map(guidelineById).filter((g): g is GuidelinePassage => !!g);
+}
+
+export interface GraphOptions {
+  maxRounds?: number;
+  /** "model" rewrites each round's questions with the fast model; "template" asks the template wording as is. */
+  phrasing?: "model" | "template";
+}
+
+export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, opts: GraphOptions = {}) {
+  const maxRounds = opts.maxRounds ?? DEFAULT_MAX_ROUNDS;
+  const phrasing = opts.phrasing ?? "model";
+
+  function patientTurns(s: State): string[] {
+    return s.transcript.filter((t) => t.role === "patient").map((t) => t.content);
+  }
   function setup(s: State) {
     const template = chooseTemplate(s.complaint);
     return {
@@ -65,14 +107,23 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
     };
   }
 
-  /** Update the record from the latest patient turn only (design doc §8.2). */
-  async function understand(s: State) {
+  /** Red-flag rules over everything the patient said. A level I/II hit ends the consultation before any model call. */
+  function screen(s: State) {
+    const ruleHits = matchPatientTurns(patientTurns(s));
+    const level = mostUrgent(s.level, ...ruleHits.map((h) => h.level));
+    if (!isEmergency(level)) return {};
+    return { level, ruleHits, levelReason: "患者原话命中危险信号规则" };
+  }
+
+  /** Update the record from the latest patient turn only (DESIGN.md §8.2). */
+  async function understand(s: State, config?: LangGraphRunnableConfig) {
     const template = templateOf(s);
     const latest = s.transcript.at(-1)!.content;
     const asked = s.pendingSlotIds.map((id) => findSlot(template, id)).filter((x): x is Slot => !!x);
     const question = s.asked.at(-1)?.text ?? "（开场主诉）";
     const out = await llm.invoke({
       task: "extract",
+      signal: config?.signal,
       schema: extractSchema,
       ...extractPrompt(template, s.record, asked, question, latest),
       context: { template, record: s.record, asked, answer: latest },
@@ -81,17 +132,17 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
     return { record, rejected, pendingSlotIds: [] };
   }
 
-  async function triage(s: State) {
+  async function triage(s: State, config?: LangGraphRunnableConfig) {
     const template = templateOf(s);
     const latest = s.transcript.at(-1)!.content;
     const out = await llm.invoke({
       task: "triage",
+      signal: config?.signal,
       schema: triageSchema,
       ...triagePrompt(template, s.record, latest),
       context: { text: latest },
     });
-    const allPatientText = s.transcript.filter((t) => t.role === "patient").map((t) => t.content).join("\n");
-    const ruleHits = matchRules(allPatientText);
+    const ruleHits = matchPatientTurns(patientTurns(s));
     const level = mostUrgent(s.level, out.level as Level, ...ruleHits.map((h) => h.level));
     const escalated = level < (out.level as Level);
     return {
@@ -101,21 +152,31 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
     };
   }
 
-  async function ask(s: State) {
-    const template = templateOf(s);
-    const p = plan(template, s.record, s.asked, maxRounds);
+  /** Rewrite the next round's questions. Runs alongside triage; skipped when the planner is done. */
+  async function phrase(s: State, config?: LangGraphRunnableConfig) {
+    const p = plan(templateOf(s), s.record, s.asked, maxRounds);
+    if (p.done) return { proposed: null };
     const out = await llm.invoke({
       task: "phrase",
+      signal: config?.signal,
       schema: phraseSchema,
       ...phrasePrompt(p.slots, s.asked.map((r) => r.text)),
       context: { slots: p.slots },
     });
     // Fall back to the template wording if the model returned the wrong count.
-    const questions = out.questions.length === p.slots.length ? out.questions : p.slots.map((x) => x.question);
-    const text = questions.join(" ");
+    if (out.questions.length !== p.slots.length) return { proposed: null };
+    return { proposed: { slotIds: p.slots.map((x) => x.id), questions: out.questions } };
+  }
+
+  function ask(s: State) {
+    const p = plan(templateOf(s), s.record, s.asked, maxRounds);
+    const ids = p.slots.map((x) => x.id);
+    const rewritten = s.proposed && s.proposed.slotIds.join() === ids.join() ? s.proposed.questions : null;
+    const text = (rewritten ?? p.slots.map((x) => x.question)).join(" ");
     return {
-      pendingSlotIds: p.slots.map((x) => x.id),
-      asked: [{ round: s.asked.length + 1, slotIds: p.slots.map((x) => x.id), text }],
+      pendingSlotIds: ids,
+      proposed: null,
+      asked: [{ round: s.asked.length + 1, slotIds: ids, text }],
       transcript: [{ role: "agent" as const, content: text }],
     };
   }
@@ -126,14 +187,22 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
     return { transcript: [{ role: "patient" as const, content: answer }] };
   }
 
-  async function draft(s: State) {
+  /** Guideline passages for the doctor-facing suggestions. In-process, no model call. */
+  function retrieve(s: State) {
+    const hits = retrieveGuidelines(guidelineQuery(s, templateOf(s)), GUIDELINES_PER_NOTE);
+    return { guidelineIds: hits.map((h) => h.passage.id) };
+  }
+
+  async function draft(s: State, config?: LangGraphRunnableConfig) {
     const template = templateOf(s);
+    const passages = passagesOf(s);
     try {
       const note = await llm.invoke({
         task: "note",
+        signal: config?.signal,
         schema: noteSchema,
-        ...notePrompt(template, s.record, s.issues, s.note),
-        context: { template, record: s.record, complaint: s.complaint },
+        ...notePrompt(template, s.record, s.issues, s.note, passages),
+        context: { template, record: s.record, complaint: s.complaint, passages },
       });
       return { note };
     } catch (err) {
@@ -143,7 +212,7 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
     }
   }
 
-  async function check(s: State) {
+  async function check(s: State, config?: LangGraphRunnableConfig) {
     const template = templateOf(s);
     const note = s.note!;
     const issues: string[] = [];
@@ -153,12 +222,19 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
       const bad = sentence.slotIds.filter((id) => s.record[id]?.status !== "answered");
       if (bad.length) issues.push(`「${sentence.text}」引用了没有答案的要点 ${bad.join("、")}`);
     }
+    // Every doctor-facing suggestion must cite a guideline passage retrieved for this consultation.
+    for (const x of [...note.forDoctor.possibleCauses, ...note.forDoctor.suggestedTests]) {
+      if (x.sources.length === 0) issues.push(`建议「${x.name}」没有标注指南出处`);
+      const unknown = x.sources.filter((id) => !s.guidelineIds.includes(id));
+      if (unknown.length) issues.push(`建议「${x.name}」引用的指南片段 ${unknown.join("、")} 不在检索结果中`);
+    }
     let review;
     try {
       review = await llm.invoke({
         task: "review",
+        signal: config?.signal,
         schema: reviewSchema,
-        ...reviewPrompt(template, s.record, note),
+        ...reviewPrompt(template, s.record, note, passagesOf(s)),
         context: { note },
       });
     } catch (err) {
@@ -177,12 +253,16 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
   }
 
   function emergency(s: State) {
-    return { status: "emergency" as const, output: renderEmergency(s) };
+    return { status: "emergency" as const, proposed: null, output: renderEmergency(s) };
+  }
+
+  function afterScreen(s: State) {
+    return isEmergency(s.level) ? "emergency" : "understand";
   }
 
   function afterTriage(s: State) {
     if (isEmergency(s.level)) return "emergency";
-    return plan(templateOf(s), s.record, s.asked, maxRounds).done ? "draft" : "ask";
+    return plan(templateOf(s), s.record, s.asked, maxRounds).done ? "retrieve" : "ask";
   }
 
   function afterCheck(s: State) {
@@ -190,25 +270,32 @@ export function buildGraph(llm: LLM, checkpointer: BaseCheckpointSaver, maxRound
     return s.reviewFailures <= MAX_NOTE_REWRITES ? "draft" : "finalize";
   }
 
-  return new StateGraph(ConsultationState)
+  const graph = new StateGraph(ConsultationState)
     .addNode("setup", setup)
+    .addNode("screen", screen)
     .addNode("understand", understand)
     .addNode("triage", triage)
     .addNode("ask", ask)
     .addNode("wait", wait)
+    .addNode("retrieve", retrieve)
     .addNode("draft", draft)
     .addNode("check", check)
     .addNode("finalize", finalize)
     .addNode("emergency", emergency)
     .addEdge(START, "setup")
-    .addEdge("setup", "understand")
+    .addEdge("setup", "screen")
+    .addConditionalEdges("screen", afterScreen, ["emergency", "understand"])
     .addEdge("understand", "triage")
-    .addConditionalEdges("triage", afterTriage, ["emergency", "ask", "draft"])
+    .addConditionalEdges("triage", afterTriage, ["emergency", "ask", "retrieve"])
     .addEdge("ask", "wait")
-    .addEdge("wait", "understand")
+    .addEdge("wait", "screen")
+    .addEdge("retrieve", "draft")
     .addEdge("draft", "check")
     .addConditionalEdges("check", afterCheck, ["draft", "finalize"])
     .addEdge("finalize", END)
-    .addEdge("emergency", END)
-    .compile({ checkpointer });
+    .addEdge("emergency", END);
+  // `phrase` has no outgoing edge: it runs in the same step as triage, and the
+  // node triage routes to sees its result.
+  if (phrasing === "model") graph.addNode("phrase", phrase).addEdge("understand", "phrase");
+  return graph.compile({ checkpointer });
 }

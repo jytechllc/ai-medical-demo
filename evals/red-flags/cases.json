@@ -1,0 +1,1216 @@
+[
+  {
+    "id": "rf-01",
+    "kind": "redflag",
+    "turns": [
+      "最近老是不时呼吸困难"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-02",
+    "kind": "redflag",
+    "turns": [
+      "无缘无故晕倒了"
+    ],
+    "expect": {
+      "rule": "意识改变或晕厥",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-03",
+    "kind": "redflag",
+    "turns": [
+      "毫无征兆就晕倒"
+    ],
+    "expect": {
+      "rule": "意识改变或晕厥",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-04",
+    "kind": "redflag",
+    "turns": [
+      "全身无力晕倒了"
+    ],
+    "expect": {
+      "rule": "意识改变或晕厥",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-05",
+    "kind": "redflag",
+    "turns": [
+      "一直不停抽搐"
+    ],
+    "expect": {
+      "rule": "抽搐",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-06",
+    "kind": "redflag",
+    "turns": [
+      "不断呕血"
+    ],
+    "expect": {
+      "rule": "消化道大出血",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-07",
+    "kind": "redflag",
+    "turns": [
+      "止不住地吐血"
+    ],
+    "expect": {
+      "rule": "消化道大出血",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-08",
+    "kind": "redflag",
+    "turns": [
+      "不知不觉昏过去"
+    ],
+    "expect": {
+      "rule": "意识改变或晕厥",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-09",
+    "kind": "redflag",
+    "turns": [
+      "我这是不是呼吸困难啊"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound",
+      "question-form"
+    ]
+  },
+  {
+    "id": "rf-10",
+    "kind": "redflag",
+    "turns": [
+      "没有发烧但呼吸困难"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "contrast-clause"
+    ]
+  },
+  {
+    "id": "rf-11",
+    "kind": "redflag",
+    "turns": [
+      "没",
+      "喘不上气"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "multi-turn"
+    ]
+  },
+  {
+    "id": "rf-12",
+    "kind": "redflag",
+    "turns": [
+      "心里不舒服喘不上气"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-13",
+    "kind": "redflag",
+    "turns": [
+      "受不了了呼吸困难"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-14",
+    "kind": "redflag",
+    "turns": [
+      "没完没了地吐血"
+    ],
+    "expect": {
+      "rule": "消化道大出血",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-15",
+    "kind": "redflag",
+    "turns": [
+      "不知道为什么突然晕倒了"
+    ],
+    "expect": {
+      "rule": "意识改变或晕厥",
+      "level": 2
+    },
+    "tags": [
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "rf-16",
+    "kind": "redflag",
+    "turns": [
+      "咳嗽不发烧，可是喘不过气"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "contrast-clause"
+    ]
+  },
+  {
+    "id": "rf-17",
+    "kind": "redflag",
+    "turns": [
+      "没有发烧",
+      "就是喘不过气"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "multi-turn"
+    ]
+  },
+  {
+    "id": "rf-18",
+    "kind": "redflag",
+    "turns": [
+      "突然喘不上气"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-19",
+    "kind": "redflag",
+    "turns": [
+      "胸口痛了一个小时，一直出大汗"
+    ],
+    "expect": {
+      "rule": "胸痛伴大汗或持续不缓解",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-20",
+    "kind": "redflag",
+    "turns": [
+      "压榨样的胸口痛"
+    ],
+    "expect": {
+      "rule": "胸痛伴大汗或持续不缓解",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-21",
+    "kind": "redflag",
+    "turns": [
+      "嘴歪了，说话不清楚"
+    ],
+    "expect": {
+      "rule": "卒中征象",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-22",
+    "kind": "redflag",
+    "turns": [
+      "突然一侧肢体无力"
+    ],
+    "expect": {
+      "rule": "卒中征象",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-23",
+    "kind": "redflag",
+    "turns": [
+      "半边身子没力气"
+    ],
+    "expect": {
+      "rule": "卒中征象",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-24",
+    "kind": "redflag",
+    "turns": [
+      "孩子抽风了"
+    ],
+    "expect": {
+      "rule": "抽搐",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-25",
+    "kind": "redflag",
+    "turns": [
+      "吐血了一大口"
+    ],
+    "expect": {
+      "rule": "消化道大出血",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-26",
+    "kind": "redflag",
+    "turns": [
+      "大便是柏油样的"
+    ],
+    "expect": {
+      "rule": "消化道大出血",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-27",
+    "kind": "redflag",
+    "turns": [
+      "这辈子最厉害的头痛"
+    ],
+    "expect": {
+      "rule": "突发剧烈头痛",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-28",
+    "kind": "redflag",
+    "turns": [
+      "头痛得从来没有这么厉害"
+    ],
+    "expect": {
+      "rule": "突发剧烈头痛",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-29",
+    "kind": "redflag",
+    "turns": [
+      "有点不想活了"
+    ],
+    "expect": {
+      "rule": "自伤风险",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-30",
+    "kind": "redflag",
+    "turns": [
+      "想自杀"
+    ],
+    "expect": {
+      "rule": "自伤风险",
+      "level": 2
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-31",
+    "kind": "redflag",
+    "turns": [
+      "我爸昏迷了"
+    ],
+    "expect": {
+      "rule": "意识丧失或呼吸停止",
+      "level": 1
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-32",
+    "kind": "redflag",
+    "turns": [
+      "怎么叫都叫不醒"
+    ],
+    "expect": {
+      "rule": "意识丧失或呼吸停止",
+      "level": 1
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-33",
+    "kind": "redflag",
+    "turns": [
+      "突然停止呼吸了"
+    ],
+    "expect": {
+      "rule": "意识丧失或呼吸停止",
+      "level": 1
+    },
+    "tags": [
+      "plain"
+    ]
+  },
+  {
+    "id": "rf-34",
+    "kind": "redflag",
+    "turns": [
+      "上楼就胸闷"
+    ],
+    "expect": {
+      "rule": "活动相关胸闷胸痛",
+      "level": 3
+    },
+    "tags": [
+      "urgent"
+    ]
+  },
+  {
+    "id": "rf-35",
+    "kind": "redflag",
+    "turns": [
+      "发烧到39.5度"
+    ],
+    "expect": {
+      "rule": "高热",
+      "level": 3
+    },
+    "tags": [
+      "urgent"
+    ]
+  },
+  {
+    "id": "rf-36",
+    "kind": "redflag",
+    "turns": [
+      "这两天拉黑便"
+    ],
+    "expect": {
+      "rule": "黑便",
+      "level": 3
+    },
+    "tags": [
+      "urgent"
+    ]
+  },
+  {
+    "id": "rf-37",
+    "kind": "redflag",
+    "turns": [
+      "三个月瘦了10斤"
+    ],
+    "expect": {
+      "rule": "不明原因体重下降",
+      "level": 3
+    },
+    "tags": [
+      "urgent"
+    ]
+  },
+  {
+    "id": "rf-38",
+    "kind": "redflag",
+    "turns": [
+      "一直不停地拉黑便"
+    ],
+    "expect": {
+      "rule": "黑便",
+      "level": 3
+    },
+    "tags": [
+      "urgent",
+      "non-negating-compound"
+    ]
+  },
+  {
+    "id": "neg-01",
+    "kind": "denial",
+    "turns": [
+      "没有呼吸困难"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-02",
+    "kind": "denial",
+    "turns": [
+      "我没有呼吸困难，也没有胸痛"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-03",
+    "kind": "denial",
+    "turns": [
+      "否认胸痛大汗"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-04",
+    "kind": "denial",
+    "turns": [
+      "不抽搐"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-05",
+    "kind": "denial",
+    "turns": [
+      "孩子没有抽搐过"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-06",
+    "kind": "denial",
+    "turns": [
+      "无呕血"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-07",
+    "kind": "denial",
+    "turns": [
+      "没吐血"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-08",
+    "kind": "denial",
+    "turns": [
+      "否认有明显的呼吸困难"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "filler"
+    ]
+  },
+  {
+    "id": "neg-09",
+    "kind": "denial",
+    "turns": [
+      "没有出现呼吸困难"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "filler"
+    ]
+  },
+  {
+    "id": "neg-10",
+    "kind": "denial",
+    "turns": [
+      "没有晕倒过"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-11",
+    "kind": "denial",
+    "turns": [
+      "从来没有昏迷"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-12",
+    "kind": "denial",
+    "turns": [
+      "无黑便"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-13",
+    "kind": "denial",
+    "turns": [
+      "没有便血"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-14",
+    "kind": "denial",
+    "turns": [
+      "没有口角歪斜"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial"
+    ]
+  },
+  {
+    "id": "neg-15",
+    "kind": "denial",
+    "turns": [
+      "未出现抽搐"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "filler"
+    ]
+  },
+  {
+    "id": "neg-16",
+    "kind": "denial",
+    "turns": [
+      "没感到喘不上气"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "filler"
+    ]
+  },
+  {
+    "id": "neg-17",
+    "kind": "denial",
+    "turns": [
+      "没觉得呼吸困难"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "filler"
+    ]
+  },
+  {
+    "id": "neg-18",
+    "kind": "denial",
+    "turns": [
+      "也没有什么呼吸困难"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "filler"
+    ]
+  },
+  {
+    "id": "neg-19",
+    "kind": "denial",
+    "turns": [
+      "胸闷两天了",
+      "没有呼吸困难"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "denial",
+      "multi-turn"
+    ]
+  },
+  {
+    "id": "rt-01",
+    "kind": "routine",
+    "turns": [
+      "咳嗽三天，有点低烧"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-02",
+    "kind": "routine",
+    "turns": [
+      "头痛一周了"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-03",
+    "kind": "routine",
+    "turns": [
+      "膝盖疼，上下楼梯更明显"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-04",
+    "kind": "routine",
+    "turns": [
+      "胃胀反酸"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-05",
+    "kind": "routine",
+    "turns": [
+      "嗓子疼"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-06",
+    "kind": "routine",
+    "turns": [
+      "晚上老是睡不着"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-07",
+    "kind": "routine",
+    "turns": [
+      "拉肚子两天"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-08",
+    "kind": "routine",
+    "turns": [
+      "腰疼"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-09",
+    "kind": "routine",
+    "turns": [
+      "皮肤起疹子很痒"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-10",
+    "kind": "routine",
+    "turns": [
+      "流鼻涕打喷嚏"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-11",
+    "kind": "routine",
+    "turns": [
+      "胸闷两周了"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-12",
+    "kind": "routine",
+    "turns": [
+      "发烧38度"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-13",
+    "kind": "routine",
+    "turns": [
+      "不时咳嗽几声"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-14",
+    "kind": "routine",
+    "turns": [
+      "头晕了一下，现在好了"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "rt-15",
+    "kind": "routine",
+    "turns": [
+      "月经推迟了一周"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "routine"
+    ]
+  },
+  {
+    "id": "neg-r1",
+    "kind": "denial",
+    "turns": [
+      "没有喘不上气、呼吸困难的感觉。除了咳嗽、发烧和胸闷，没有别的不舒服。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-list"
+    ]
+  },
+  {
+    "id": "neg-r2",
+    "kind": "denial",
+    "turns": [
+      "没有感觉喘不上气或者呼吸困难。除了咳嗽、发烧和胸闷，没有别的不舒服的地方。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-list"
+    ]
+  },
+  {
+    "id": "neg-r3",
+    "kind": "denial",
+    "turns": [
+      "稍微有点胸闷，但没有喘不上气、呼吸困难的感觉。以前没有什么特别的病史，也没有药物过敏。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-list"
+    ]
+  },
+  {
+    "id": "neg-r4",
+    "kind": "denial",
+    "turns": [
+      "胸口不舒服的时候没有出大汗，也没有喘不上气。休息时胸痛不会持续二十分钟以上。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-filler"
+    ]
+  },
+  {
+    "id": "rf-r1",
+    "kind": "redflag",
+    "turns": [
+      "没有发烧，就是喘不上气"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "real-transcript",
+      "denial-list"
+    ]
+  },
+  {
+    "id": "rf-r2",
+    "kind": "redflag",
+    "turns": [
+      "不想吃饭，呼吸困难"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "denial-list"
+    ]
+  },
+  {
+    "id": "rf-r3",
+    "kind": "redflag",
+    "turns": [
+      "不想吃饭和呼吸困难"
+    ],
+    "expect": {
+      "rule": "呼吸困难",
+      "level": 2
+    },
+    "tags": [
+      "denial-list"
+    ]
+  },
+  {
+    "id": "neg-r5",
+    "kind": "denial",
+    "turns": [
+      "最近没有特别觉得喘不上气或者呼吸困难，只是有点胸闷，深呼吸时右边有点疼。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-filler"
+    ]
+  },
+  {
+    "id": "neg-r6",
+    "kind": "denial",
+    "turns": [
+      "这些我都没有，没注意到吐血、大便发黑，也没有肚子厉害疼或者疼得一直缓解不了的情况。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-filler",
+      "denial-list"
+    ]
+  },
+  {
+    "id": "neg-r7",
+    "kind": "denial",
+    "turns": [
+      "这次头痛不是突然发作的，也不是我这辈子最厉害的一次。我没有出现嘴歪、一边手脚没力气，或者说话不清楚的情况。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-list"
+    ]
+  },
+  {
+    "id": "neg-r8",
+    "kind": "denial",
+    "turns": [
+      "这次头痛不是突然发作，也不是这辈子最厉害的一次。我没有注意到嘴歪、一边手脚没力气，或者说话不清楚的情况。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-list",
+      "denial-filler"
+    ]
+  },
+  {
+    "id": "neg-r9",
+    "kind": "denial",
+    "turns": [
+      "有点胸闷，深呼吸的时候右边有点疼。不过还没有到喘不上气、呼吸困难的程度。"
+    ],
+    "expect": {
+      "rule": null,
+      "level": 4
+    },
+    "tags": [
+      "real-transcript",
+      "denial-filler"
+    ]
+  },
+  {
+    "id": "rf-r4",
+    "kind": "redflag",
+    "turns": [
+      "头痛得厉害，或者说话不清楚"
+    ],
+    "expect": {
+      "rule": "卒中征象",
+      "level": 2
+    },
+    "tags": [
+      "denial-list"
+    ]
+  }
+]
